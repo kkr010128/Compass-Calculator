@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>엑셀 업로드</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="upload-container">
+        <h1>엑셀 파일 업로드</h1>
+        <form id="upload-form" method="POST" action="/upload" enctype="multipart/form-data">
+            <div class="drop-zone" id="drop-zone">
+                <span id="file-name">클릭 또는 엑셀 파일 드래그</span>
+                <input type="file" name="file" id="file-input" accept=".xls,.xlsx" hidden>
+            </div>
+            <button type="submit" class="upload-btn">업로드</button>
+        </form>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById("drop-zone");
+        const fileInput = document.getElementById("file-input");
+        const fileNameSpan = document.getElementById("file-name");
+        const form = document.getElementById("upload-form");
+    
+        // 클릭하면 파일 선택창 열기
+        dropZone.addEventListener("click", () => fileInput.click());
+    
+        // 마우스 드래그 진입 시 시각 효과
+        dropZone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropZone.classList.add("drag-over");
+        });
+    
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.classList.remove("drag-over");
+        });
+    
+        // 드롭했을 때 파일 바인딩
+        dropZone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropZone.classList.remove("drag-over");
+    
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                fileNameSpan.textContent = files[0].name;  // ✅ 파일명 화면에 표시
+            }
+        });
+    
+        // 클릭으로 선택해도 파일명 표시
+        fileInput.addEventListener("change", () => {
+            if (fileInput.files.length > 0) {
+                fileNameSpan.textContent = fileInput.files[0].name;
+            }
+        });
+    </script>
+</body>
+</html>
